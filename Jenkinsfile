@@ -10,7 +10,7 @@ pipeline {
         stage('1. Checkout & Setup') {
             steps {
                 echo "🔁 Récupération du code"
-                git branch: 'main', 
+                git branch: 'master', 
                 url: 'https://github.com/lynfrank/ais_devops_project'
                 
                 sh 'docker volume create todo-mysql-data || true'
