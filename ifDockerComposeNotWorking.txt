@@ -1,0 +1,23 @@
+docker --version
+# Doit afficher Docker version 20.10.5 ou supérieur
+
+# Télécharger la dernière version
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+# Rendre le binaire exécutable
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Créer un lien symbolique pour les nouvelles versions
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+
+docker-compose --version
+# Doit afficher : Docker Compose version v2.23.3
+
+sudo apt update
+sudo apt install docker-compose-plugin -y
+
+docker-compose build
+docker-compose up -d
+docker-compose logs -f app
+

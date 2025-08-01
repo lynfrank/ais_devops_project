@@ -1,0 +1,39 @@
+#Install Terraform and VSC on your devices
+#clone all files
+#get into the terraform file
+#first connect to your azure account
+
+az login
+
+terraform init
+terraform validate
+terraform plan
+terraform apply
+
+# Normaly you have a apache webser running on 80 port with your jenkins admin password so no need to ssh your server
+# configure your jenkins, create your new admin
+# create a new pipeline
+# put the repo link "https://github.com/stanilpaul/docker-getting-started-devops-enhanced.git"
+# select SMC -> Git
+# change the branch name to "main"
+# save changes  
+# build
+# go to the Pipeline Overview
+
+# if only you have error, then ssh to your server
+
+----------------------------------------------------------
+#From the developper PC
+# me from my VSC , install git
+# configure git (git config , git remote, git clone)
+# in jenkins , install Git server, 
+# from general information, find git server and add github credential (token)
+  #to create a token, go to Settings>Developper settings >Personal token 6> Classic > create one classic> select repo and work fellow > save somewhere the token
+# then just save all changes
+
+# go to your repository settings, for me "https://github.com/stanilpaul/docker-getting-started-devops-enhanced/settings"
+# go to the webhook section and create on by adding your jenkins link + "github-webhook" -> http://yourPublicIp:8080/github-webhook/
+# then go back to your first created pipeline settings, check githook option and save.
+# now from your developper VSC , if you make any changes, the pipeline job will trigered and the application will rebuild and republished.
+
+# modifify the file "src/static/js/app.js"
