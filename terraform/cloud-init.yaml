@@ -17,14 +17,14 @@ runcmd:
   - sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   - sudo chmod +x /usr/local/bin/docker-compose
   - sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-  - sudo apt update
+  - sudo apt update -y
   - sudo apt install docker-compose-plugin -y
 
   # Ajouter la clé Jenkins et repo
-  - sudo apt update
-  - sudo apt install fontconfig openjdk-21-jre -y
-  - sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian/jenkins.io-2023.key
-  - echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" https://pkg.jenkins.io/debian binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+  - sudo apt update -y
+  - sudo apt install fontconfig openjdk-21-jre
+  - sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+  - echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
   - sudo apt-get update -y
   - sudo apt-get install jenkins -y
 
@@ -40,8 +40,8 @@ runcmd:
   
   # Modifier la page par défaut d’Apache pour afficher le mot de passe Jenkins
   - sudo apt install apache2 -y
-  - echo "Love from paul" > /var/www/html/index.html
-  - echo "Jenkins initial admin password</h1><p>${PASSWORD}" > /var/www/html/index.html
+  - sudo echo "Love from paul" > /var/www/html/index.html
+  - sudo echo "Jenkins initial admin password</h1><p>${PASSWORD}" > /var/www/html/index.html
 
   # Redémarrer Apache
-  - systemctl restart apache2
+  - sudo systemctl restart apache2
