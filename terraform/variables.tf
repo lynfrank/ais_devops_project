@@ -18,7 +18,7 @@ variable "admin_password" {
 }
 variable "vm_size" {
   type        = string
-  default     = "Standard_D2as_v5"
+  default     = "Standard_B1s"
   description = "Size of the virtual machine"
 }
 variable "resource_group_name" {
@@ -58,8 +58,8 @@ variable "ubuntu_image" {
   description = "Ubuntu image reference"
   default = {
     publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts-gen2"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"
     version   = "latest"
 
   }

@@ -1,9 +1,8 @@
-# basic information to include when we are using for azure
 terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.0"
+      version = "~> 3.1.0"
     }
   }
   required_version = ">= 1.1.0 "
@@ -40,17 +39,6 @@ resource "azurerm_public_ip" "devops_pip" {
   sku = "Standard"
   depends_on          = [azurerm_resource_group.devops_rg]
 }
-# resource "azurerm_public_ip" "devops_pip" {
-#   name                = var.public_ip_name
-#   resource_group_name = azurerm_resource_group.devops_rg.name
-#   location            = azurerm_resource_group.devops_rg.location
-#   allocation_method   = "Dynamic"
-#   sku                 = "Standard"
-
-#   tags = {
-#     environment = "devops"
-#   }
-# }
 
 resource "azurerm_network_security_group" "devops_nsg" {
   name                = var.nsg_name
@@ -92,18 +80,17 @@ resource "azurerm_network_interface" "devops_nic" {
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.devops_pip.id
   }
-  depends_on = [azurerm_public_ip.devops_pip, azurerm_subnet.devops_subnet, azurerm_public_ip.devops_pip]
+
+  depends_on = [
+    azurerm_subnet_network_security_group_association.nsg_association
+  ]
 }
 # I am going to associate the NSG to the subnet
 resource "azurerm_subnet_network_security_group_association" "nsg_association" {
   subnet_id                 = azurerm_subnet.devops_subnet.id
   network_security_group_id = azurerm_network_security_group.devops_nsg.id
-  depends_on                = [azurerm_subnet.devops_subnet, azurerm_network_security_group.devops_nsg]
+  # depends_on                = [azurerm_subnet.devops_subnet, azurerm_network_security_group.devops_nsg]
 }
-
-
-
-
 
 # our spot ubuntu
 resource "azurerm_linux_virtual_machine" "devops_vm" {
@@ -119,8 +106,8 @@ resource "azurerm_linux_virtual_machine" "devops_vm" {
     azurerm_network_interface.devops_nic.id,
   ]
 
-  priority        = "Spot"
-  eviction_policy = "Deallocate"
+  # priority        = "Spot"
+  # eviction_policy = "Deallocate"
 
   os_disk {
     caching              = "ReadWrite"
@@ -142,27 +129,6 @@ resource "azurerm_linux_virtual_machine" "devops_vm" {
 }
 
 
-####
-
-/*
-resource "azurerm_virtual_machine_extension" "install_jenkins" {
-  name                 = "install-jenkins"
-  virtual_machine_id   = azurerm_linux_virtual_machine.devops_vm.id
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.1"
-
-  settings = jsonencode({
-    fileUris         = ["https://raw.githubusercontent.com/stanilpaul/docker-getting-started-devops-enhanced/main/install_jenkins.sh"]
-    commandToExecute = "bash install_jenkins.sh"
-  })
-
-  depends_on = [azurerm_linux_virtual_machine.devops_vm]
-}
-*/
-####
-
-
 #output : this part is what we will see later terraform apply 
 output "public_ip" {
   value      = azurerm_public_ip.devops_pip.ip_address
@@ -172,5 +138,3 @@ output "ssh_command" {
   value      = "ssh ${var.admin_username}@${azurerm_public_ip.devops_pip.ip_address}"
   depends_on = [azurerm_linux_virtual_machine.devops_vm, azurerm_public_ip.devops_pip]
 }
-
-
