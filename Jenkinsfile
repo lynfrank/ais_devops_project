@@ -11,7 +11,7 @@ pipeline {
             steps {
                 echo "🔁 Récupération du code"
                 git branch: 'main', 
-                url: 'https://github.com/stanilpaul/docker-getting-started-devops-enhanced.git'
+                url: 'https://github.com/lynfrank/ais_devops_project'
                 
                 sh 'docker volume create todo-mysql-data || true'
             }
