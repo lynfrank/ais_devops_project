@@ -3,45 +3,41 @@ package_update: true
 package_upgrade: true
 packages:
   - docker.io
-  - openjdk-17-jre
+  - openjdk-17-jdk  # Utiliser JDK au lieu de JRE
   - apache2
   - curl
   - gnupg
- 
+  - docker-compose-plugin  # Installer via APT pour éviter les conflits
+
 runcmd:
   # Démarrer et activer docker
+  - set -e
+  - sudo systemctl enable docker
+  - sudo systemctl start docker
+
+  # Installation de Docker Compose via APT (plus fiable)
   - sudo apt update -y
-  - sudo apt install docker.io -y
-  - systemctl enable docker
-  - systemctl start docker
-  - sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  - sudo chmod +x /usr/local/bin/docker-compose
-  - sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-  - sudo apt update -y
-  - sudo apt install docker-compose-plugin -y
+  - sudo apt install -y docker-compose-plugin
 
   # Ajouter la clé Jenkins et repo
+  - sudo mkdir -p /etc/apt/keyrings
+  - curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee /etc/apt/keyrings/jenkins-keyring.asc > /dev/null
+  - echo deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
   - sudo apt update -y
-  - sudo apt install fontconfig openjdk-21-jre
-  - sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-  - echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
-  - sudo apt-get update -y
-  - sudo apt-get install jenkins -y
+  - sudo apt install -y jenkins
 
   # Ajouter Jenkins au groupe docker et démarrer Jenkins
   - usermod -aG docker jenkins
-  - systemctl enable jenkins
-  - systemctl start jenkins
-  - systemctl restart jenkins
+  - sudo systemctl enable jenkins
+  - sudo systemctl start jenkins
 
   # Attendre que Jenkins démarre et récupérer le mot de passe admin
   - bash -c "until curl -s http://localhost:8080 > /dev/null; do sleep 10; done"
   - PASSWORD=$(cat /var/lib/jenkins/secrets/initialAdminPassword)
-  
+
   # Modifier la page par défaut d’Apache pour afficher le mot de passe Jenkins
-  - sudo apt install apache2 -y
-  - sudo echo "Love from paul" > /var/www/html/index.html
-  - sudo echo "Jenkins initial admin password</h1><p>${PASSWORD}" > /var/www/html/index.html
+  - echo "Love from paul" > /var/www/html/index.html
+  - echo "Jenkins initial admin password</h1><p>${PASSWORD}" >> /var/www/html/index.html
 
   # Redémarrer Apache
   - sudo systemctl restart apache2
