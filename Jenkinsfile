@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         APP_PORT = "3000"
-        VM_IP = "4.251.118.250"  // Votre IP
+        VM_IP = "addressPublic"  // Votre IP
     }
 
     stages {
@@ -11,7 +11,7 @@ pipeline {
             steps {
                 echo "🔁 Récupération du code"
                 git branch: 'master', 
-                url: 'https://github.com/lynfrank/ais_devops_project'
+                url: 'https://github.com/lynfrank/ais_devops_project.git'
                 
                 sh 'docker volume create todo-mysql-data || true'
             }
