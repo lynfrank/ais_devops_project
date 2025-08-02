@@ -18,7 +18,7 @@ variable "admin_password" {
 }
 variable "vm_size" {
   type        = string
-  default     = "Standard_B1s"
+  default     = "Standard_B2ms"
   description = "Size of the virtual machine"
 }
 variable "resource_group_name" {
