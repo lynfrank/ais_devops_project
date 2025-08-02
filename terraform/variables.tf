@@ -37,7 +37,7 @@ variable "subnet_name" {
 variable "nsg_name" {
   type        = string
   default     = "terraform-nsg"
-  description = "Nsg name"
+  description = "Nsg name ha"
 }
 variable "public_ip_name" {
   type        = string
