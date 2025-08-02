@@ -22,10 +22,13 @@ pipeline {
                 echo "🔨 Construction et tests"
                 sh '''
                     # Lancement temporaire pour les tests
+                    docker-compose down
+                    sleep 15
+                    docker-compose build
                     docker-compose up -d
                     
                     # Attente démarrage MySQL
-                    sleep 15
+                    sleep 30
                     
                     # Exécution des tests
                     docker-compose exec app yarn test || true
