@@ -7,9 +7,9 @@ packages:
   - apache2
   - curl
   - gnupg
-
+ 
 runcmd:
-  # Démarrer et activer docker
+  # Démarrer et activer docker    .
   - sudo apt update -y
   - sudo apt install apache2 -y
   - echo "Love from paul" > /var/www/html/index.html
