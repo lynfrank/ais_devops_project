@@ -11,7 +11,7 @@ provider "azurerm" {
   features {}
 }
 
-# here all the config for simple ubuntu vm spot
+# here all the config for simple ubuntu vm
 
 resource "azurerm_resource_group" "devops_rg" {
   name     = var.resource_group_name
@@ -92,7 +92,7 @@ resource "azurerm_subnet_network_security_group_association" "nsg_association" {
   # depends_on                = [azurerm_subnet.devops_subnet, azurerm_network_security_group.devops_nsg]
 }
 
-# our spot ubuntu
+# our ubuntu
 resource "azurerm_linux_virtual_machine" "devops_vm" {
   name                            = var.vm_name
   resource_group_name             = azurerm_resource_group.devops_rg.name
